@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Career Dashboard | AIBridge</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link href="/static/css/career_dashboard.css" rel="stylesheet">
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg navbar-dark bg-primary mb-4">
+        <div class="container">
+            <a class="navbar-brand" href="#">AIBridge Career Dashboard</a>
+        </div>
+    </nav>
+
+    <div class="container">
+        <div class="row">
+            <!-- Student Profile Section -->
+            <div class="col-md-4 mb-4">
+                <div class="profile-card p-4 shadow-sm">
+                    <h2 class="mb-3">Your Profile</h2>
+                    <div class="mb-3">
+                        <h4>{{ student_profile.name }}</h4>
+                        <p class="text-muted">{{ student_profile.email }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h5>About Me</h5>
+                        <p>{{ student_profile.bio }}</p>
+                    </div>
+                    <div class="mb-3">
+                        <h5>My Skills</h5>
+                        <div>
+                            {% for skill in student_profile.skills.all %}
+                                <span class="badge bg-secondary skill-badge">{{ skill }}</span>
+                            {% endfor %}
+                        </div>
+                    </div>
+                    <div class="mt-4">
+                        <button class="btn btn-outline-primary">Edit Profile</button>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Job Listings Section -->
+            <div class="col-md-8">
+                <div class="d-flex justify-content-between align-items-center mb-4">
+                    <h2>Job Matches</h2>
+                    <div>
+                        <select id="filter-jobs" class="form-select">
+                            <option value="all">All Jobs</option>
+                            <option value="90">90%+ Match</option>
+                            <option value="80">80%+ Match</option>
+                            <option value="70">70%+ Match</option>
+                        </select>
+                    </div>
+                </div>
+                
+                <div id="job-listings">
+                    {% for job in jobs %}
+                    <div class="job-card card shadow-sm position-relative" data-match="{{ job.match_percentage }}">
+                        <div class="card-body">
+                            <span class="match-badge badge {% if job.match_percentage >= 90 %}bg-success{% elif job.match_percentage >= 75 %}bg-info{% else %}bg-warning{% endif %}">
+                                {{ job.match_percentage }}% Match
+                            </span>
+                            <h3 class="card-title">{{ job.title }}</h3>
+                            <h5 class="card-subtitle mb-2 text-muted">{{ job.company }}</h5>
+                            <p class="card-text">{{ job.description }}</p>
+                            <div class="mb-3">
+                                <h6>Required Skills:</h6>
+                                <div>
+                                    {% for skill in job.skills %}
+                                        <span class="badge bg-primary skill-badge">{{ skill }}</span>
+                                    {% endfor %}
+                                </div>
+                            </div>
+                            <div class="d-flex justify-content-end">
+                                <button class="btn btn-sm btn-outline-secondary me-2">Save</button>
+                                <button class="btn btn-sm btn-primary">Apply Now</button>
+                            </div>
+                        </div>
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Simple job filtering functionality
+        document.getElementById('filter-jobs').addEventListener('change', function() {
+            const threshold = this.value;
+            const jobs = document.querySelectorAll('.job-card');
+            
+            jobs.forEach(job => {
+                const matchPercentage = parseInt(job.getAttribute('data-match'));
+                if (threshold === 'all' || matchPercentage >= parseInt(threshold)) {
+                    job.style.display = 'block';
+                } else {
+                    job.style.display = 'none';
+                }
+            });
+        });
+    </script>
+</body>
+</html>

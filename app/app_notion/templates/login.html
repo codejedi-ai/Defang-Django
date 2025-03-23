@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+
+{% block title %}AI Bridge - Login{% endblock %}
+
+{% block content %}
+<div class="row mt-5">
+    <div class="col-md-6 offset-md-3">
+        <div class="card shadow">
+            <div class="card-body">
+                <h2 class="text-center mb-4">Sign In to AI Bridge</h2>
+                
+                <form method="post" action="{% url 'login' %}">
+                    {% csrf_token %}
+                    <div class="mb-3">
+                        <label for="username" class="form-label">Username</label>
+                        <input type="text" class="form-control" id="username" name="username" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password" class="form-label">Password</label>
+                        <input type="password" class="form-control" id="password" name="password" required>
+                    </div>
+                    <div class="mb-3 form-check">
+                        <input type="checkbox" class="form-check-input" id="remember-me" name="remember-me">
+                        <label class="form-check-label" for="remember-me">Remember me</label>
+                    </div>
+                    <div class="d-grid gap-2">
+                        <button type="submit" class="btn btn-primary">Sign In</button>
+                    </div>
+                </form>
+                
+                <div class="text-center mt-4">
+                    <p>Or sign in with:</p>
+                    {% load socialaccount %}
+                    <a href="{% provider_login_url 'google' %}?next=/" class="btn btn-outline-dark">
+                        <i class="fab fa-google"></i> Google
+                    </a>
+                </div>
+                
+                <hr class="my-4">
+                
+                <div class="text-center">
+                    <p class="mb-0">Don't have an account? <a href="#">Sign up</a></p>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

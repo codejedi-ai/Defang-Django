@@ -1,0 +1,223 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AIBridge - Authentication{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/auth.css' %}">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+<style>
+    .auth-container {
+        max-width: 480px;
+        margin: 2rem auto;
+        padding: 2rem;
+        border-radius: 10px;
+        box-shadow: 0 5px 15px rgba(0,0,0,0.1);
+        background-color: #fff;
+    }
+    
+    .auth-header {
+        text-align: center;
+        margin-bottom: 2rem;
+    }
+    
+    .auth-toggle {
+        display: flex;
+        margin-bottom: 1.5rem;
+        border-radius: 5px;
+        overflow: hidden;
+        border: 1px solid #ddd;
+    }
+    
+    .auth-toggle-btn {
+        flex: 1;
+        text-align: center;
+        padding: 0.75rem;
+        cursor: pointer;
+        background-color: #f8f9fa;
+        border: none;
+        transition: all 0.3s;
+    }
+    
+    .auth-toggle-btn.active {
+        background-color: #6c757d;
+        color: white;
+        font-weight: bold;
+    }
+    
+    .divider {
+        display: flex;
+        align-items: center;
+        margin: 1.5rem 0;
+        color: #6c757d;
+    }
+    
+    .divider::before, .divider::after {
+        content: "";
+        flex: 1;
+        border-bottom: 1px solid #ddd;
+    }
+    
+    .divider span {
+        padding: 0 1rem;
+    }
+    
+    #signupFields {
+        display: none;
+    }
+    
+    .form-group {
+        margin-bottom: 1rem;
+    }
+    
+    .auth-form label {
+        font-weight: 500;
+        margin-bottom: 0.5rem;
+        display: block;
+    }
+    
+    .auth-submit {
+        width: 100%;
+        padding: 0.75rem;
+        margin-top: 1rem;
+        background-color: #343a40;
+        color: white;
+        border: none;
+        border-radius: 5px;
+        font-weight: bold;
+        cursor: pointer;
+        transition: all 0.3s;
+    }
+    
+    .auth-submit:hover {
+        background-color: #23272b;
+    }
+    
+    .auth-footer {
+        text-align: center;
+        margin-top: 1.5rem;
+        font-size: 0.9rem;
+        color: #6c757d;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="container">
+    <div class="auth-container">
+        <div class="auth-header">
+            <h2 id="authTitle">Login to AIBridge</h2>
+            <p id="authSubtitle">Enter your credentials to access your account</p>
+        </div>
+        
+        <div class="auth-toggle">
+            <button id="loginToggle" class="auth-toggle-btn {% if active_form == 'login' %}active{% endif %}">Login</button>
+            <button id="signupToggle" class="auth-toggle-btn {% if active_form == 'signup' %}active{% endif %}">Sign Up</button>
+        </div>
+        
+        {% if error %}
+        <div class="alert alert-danger">{{ error }}</div>
+        {% endif %}
+        
+        <!-- Login Form -->
+        <form class="auth-form" id="loginForm" method="post" {% if active_form == 'signup' %}style="display: none;"{% endif %}>
+            {% csrf_token %}
+            <input type="hidden" name="mode" value="login">
+            
+            <div class="form-group">
+                <label for="{{ login_form.username.id_for_label }}">Email</label>
+                {{ login_form.username }}
+                {% if login_form.username.errors %}
+                <div class="text-danger">{{ login_form.username.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ login_form.password.id_for_label }}">Password</label>
+                {{ login_form.password }}
+                {% if login_form.password.errors %}
+                <div class="text-danger">{{ login_form.password.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div id="loginOptions">
+                <div class="form-check mb-3">
+                    {{ login_form.remember_me }}
+                    <label class="form-check-label" for="{{ login_form.remember_me.id_for_label }}">Remember me</label>
+                </div>
+                <div class="text-end mb-3">
+                    <a href="/reset-password">Forgot password?</a>
+                </div>
+            </div>
+            
+            <button type="submit" class="auth-submit">Login</button>
+        </form>
+        
+        <!-- Signup Form -->
+        <form class="auth-form" id="signupForm" method="post" {% if active_form == 'login' %}style="display: none;"{% endif %}>
+            {% csrf_token %}
+            <input type="hidden" name="mode" value="signup">
+            
+            <div class="form-group">
+                <label for="{{ signup_form.email.id_for_label }}">Email</label>
+                {{ signup_form.email }}
+                {% if signup_form.email.errors %}
+                <div class="text-danger">{{ signup_form.email.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ signup_form.password.id_for_label }}">Password</label>
+                {{ signup_form.password }}
+                {% if signup_form.password.errors %}
+                <div class="text-danger">{{ signup_form.password.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <div class="form-group">
+                <label for="{{ signup_form.confirm_password.id_for_label }}">Confirm Password</label>
+                {{ signup_form.confirm_password }}
+                {% if signup_form.confirm_password.errors %}
+                <div class="text-danger">{{ signup_form.confirm_password.errors }}</div>
+                {% endif %}
+            </div>
+            
+            <button type="submit" class="auth-submit">Sign Up</button>
+        </form>
+        
+        <div class="auth-footer">
+            <p>By continuing, you agree to AIBridge's <a href="/terms">Terms of Service</a> and <a href="/privacy">Privacy Policy</a></p>
+        </div>
+    </div>
+</div>
+
+<script>
+    document.addEventListener('DOMContentLoaded', function() {
+        const loginToggle = document.getElementById('loginToggle');
+        const signupToggle = document.getElementById('signupToggle');
+        const loginForm = document.getElementById('loginForm');
+        const signupForm = document.getElementById('signupForm');
+        const authTitle = document.getElementById('authTitle');
+        const authSubtitle = document.getElementById('authSubtitle');
+        
+        // Toggle between login and signup
+        loginToggle.addEventListener('click', function() {
+            loginToggle.classList.add('active');
+            signupToggle.classList.remove('active');
+            loginForm.style.display = 'block';
+            signupForm.style.display = 'none';
+            authTitle.textContent = 'Login to AIBridge';
+            authSubtitle.textContent = 'Enter your credentials to access your account';
+        });
+        
+        signupToggle.addEventListener('click', function() {
+            loginToggle.classList.remove('active');
+            signupToggle.classList.add('active');
+            loginForm.style.display = 'none';
+            signupForm.style.display = 'block';
+            authTitle.textContent = 'Create an Account';
+            authSubtitle.textContent = 'Fill in your details to get started with AIBridge';
+        });
+    });
+</script>
+{% endblock %}

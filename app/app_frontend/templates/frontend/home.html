@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}AIBridge - Home{% endblock %}
+
+{% block extra_css %}
+<link rel="stylesheet" href="{% static 'css/styles.css' %}">
+{% endblock %}
+
+{% block content %}
+<div class="container my-5">
+    <h1 class="display-4 text-center mb-5">Welcome to AIBridge</h1>
+    
+    <div class="row">
+        <!-- Left column with logo -->
+        <div class="col-md-6 mb-4 mb-md-0">
+            <div class="card h-100 d-flex align-items-center justify-content-center p-4">
+                <img src="{% static 'images/logo.png' %}" alt="AIBridge Logo" class="img-fluid">
+            </div>
+        </div>
+        
+        <!-- Right column with placeholder content -->
+        <div class="col-md-6">
+            <div class="card h-100 p-4">
+                <div class="card-body text-center">
+                    <h2 class="card-title h3 mb-4">Connect with AI</h2>
+                    <p class="card-text lead">
+                        AIBridge provides a seamless connection between your applications and powerful AI models.
+                    </p>
+                    <div class="mt-4">
+                        <a href="#" class="btn btn-primary btn-lg">Get Started</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
