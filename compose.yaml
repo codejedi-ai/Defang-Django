@@ -7,9 +7,10 @@ services:
     ports:
       - mode: ingress
         target: 8000
-        # published: 8000 # uncomment for local dev
+        published: 8000 # uncomment for local dev
     environment:
-      - DEBUG=False # set to "True" for local dev
+      - DEBUG=True # set to "True" for local dev
+    command: sh -c "python manage.py migrate && python manage.py runserver 0.0.0.0:8000"
     #deploy:
     #  resources:
     #    reservations:

@@ -32,7 +32,13 @@ SECRET_KEY = 'django-insecure-#nu1a((m473!ie3v3851jy%j4qrikp)5=%*h*lz04)-bl9o1$2
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS: list[str] = ["codejedi-ai-django--8000.prod1.defang.dev", "10.0.146.21"]
+ALLOWED_HOSTS: list[str] = [
+    "localhost",
+    "127.0.0.1",
+    "0.0.0.0",
+    "codejedi-ai-django--8000.prod1.defang.dev",
+    "10.0.146.21",
+]
 
 
 # Application definition
